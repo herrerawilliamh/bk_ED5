@@ -7,6 +7,8 @@ const socketIO = require('socket.io');
 const { Server } = require('socket.io');
 const mongoose = require('mongoose');
 const Swal = require("sweetalert2");
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 const app = express();
 const server =http.createServer(app);
@@ -17,7 +19,8 @@ const productsRouter = require('./routes/products.router.js');
 const cartsRouter = require('./routes/carts.router.js');
 const viewsRouter = require('./routes/views.router.js');
 const usersRouter = require('./routes/users.router.js');
-const chatRouter = require('./routes/chat.router.js')
+const chatRouter = require('./routes/chat.router.js');
+const sessionRouter = require('./routes/sessions.router.js');
 
 /*DAO*/
 const ProductManager = require('./dao/ProductManager.js');
@@ -76,7 +79,7 @@ io.on("connection", async (socket) =>{
 
 /*Middlewars*/
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 /*Routes*/
 app.use("/", productsRouter);
@@ -84,6 +87,7 @@ app.use("/", cartsRouter);
 app.use("/", viewsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/chat", chatRouter);
+app.use("/api/sessions", sessionRouter);
 
 /*Configuración de Mongoose*/
 mongoose.connect("mongodb+srv://herrerawilliamh:ydGbNCY5mXBYPU1w@cluster0.ncftrzr.mongodb.net/?retryWrites=true&w=majority")
@@ -93,6 +97,25 @@ mongoose.connect("mongodb+srv://herrerawilliamh:ydGbNCY5mXBYPU1w@cluster0.ncftrz
 .catch((error) => {
     console.log("Error al conectarse a la base de datos",error);
 });
+
+/*Configuración de Session*/
+app.use(session({
+    store: 
+    MongoStore.create({
+        mongoUrl: "",
+        mongoOptions: {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        },
+        ttl: 1000
+    }),
+    secret: "coderhouse",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 60000
+    }
+}));
 
 /*Respuesta del Puerto*/
 server.listen(PORT, () => {
