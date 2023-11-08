@@ -83,7 +83,7 @@ app.use(express.urlencoded({ extended: true }));
 
 /*Routes*/
 app.use("/", productsRouter);
-app.use("/", cartsRouter);
+app.use("/", cartsRouter);  
 app.use("/", viewsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/chat", chatRouter);
@@ -102,7 +102,7 @@ mongoose.connect("mongodb+srv://herrerawilliamh:ydGbNCY5mXBYPU1w@cluster0.ncftrz
 app.use(session({
     store: 
     MongoStore.create({
-        mongoUrl: "",
+        mongoUrl: "mongodb+srv://herrerawilliamh:ydGbNCY5mXBYPU1w@cluster0.ncftrzr.mongodb.net/?retryWrites=true&w=majority",
         mongoOptions: {
             useNewUrlParser: true,
             useUnifiedTopology: true
@@ -111,7 +111,7 @@ app.use(session({
     }),
     secret: "coderhouse",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         maxAge: 60000
     }

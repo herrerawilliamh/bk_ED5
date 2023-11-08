@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const { productModel } = require("./models/products.model");
 
 /*VARS*/
-
 class ProductManager{
     constructor(){
         this.products=[]

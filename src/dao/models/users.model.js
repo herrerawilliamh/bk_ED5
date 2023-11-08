@@ -26,12 +26,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         min:8,
         required: true
-    }/*,
+    },
     role: {
         type: String,
+        default: 'user',
         max: 20,
         required: true
-    },
+    }/*,
     status: {
         type: Boolean,
         required: true
@@ -49,6 +50,14 @@ const userSchema = new mongoose.Schema({
         required: true
     }*/
 });
+
+userSchema.methods.isValidPassword = async function(password) {
+    try {
+        return await bcrypt.compare(password, this.password);
+    } catch (error) {
+        throw error;
+    }
+};
 
 const userModel = mongoose.model(userCollection, userSchema);
 

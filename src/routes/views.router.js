@@ -23,10 +23,30 @@ router.post('/realtimeproducts', async (req, res) => {
    }
 });
 
-router.get('/profile', (req, res) => {
-    if(!req.session.user){
-        return res.redirect('/login');
+const checkAuth = (req, res, next) => {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect("/login");
     }
+};
+
+const checkNotAuth = (req, res, next) => {
+    if (req.session.user) {
+        res.redirect("/profile");
+    } else {
+        next();
+    }
+};
+
+router.get("/login", checkNotAuth, (req, res) => {
+    res.render("login");
+});
+
+router.get("/register", checkNotAuth, (req, res) => {
+    res.render("register");
+});
+router.get('/profile', (req, res) => {
     const { first_name, last_name, email, age } = req.session.user
     res.render('profile', {title: "WILLY Ecommerce - Profile", first_name, last_name, email, age});
 })
